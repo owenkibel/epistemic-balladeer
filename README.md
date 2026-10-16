@@ -13,7 +13,13 @@ Many of the sharpest comic and philosophical observations rely on **epistemic re
 - *Auditing the authority that authorizes one's authority.*
 - *Doubting the degree of doubt one is permitted to hold.*
 
-When stated in prose, second-order reflexivity can feel bloodless or abstract. Grounded in the poetic philosophy of Frederick Turner's *Natural Classicism*, **The Epistemic Balladeer** treats strict metrical form not as an artificial cage, but as an acoustic carrier wave. By embodying an abstract paradox inside a concrete dramatic persona—a reluctant guild master, a dubious heir, an imposter astronomer, or an over-promoted magistrate—and driving the narrative through strict heptameter or common-measure rhythm, the philosophical punchline lands with physical inevitability.
+When stated in prose, second-order reflexivity can feel bloodless or abstract.  **The Epistemic Balladeer** is grounded in the poetic philosophy of Frederick Turner's *Natural Classicism*:
+
+[An Ecopoetics of Beauty and Meaning](https://icus.org/wp-content/uploads/2017/05/Turner-Frederick-An-Ecopoetics-of-Beauty-and-Meaning.pdf)
+
+[The Birth of Natural Classicism](https://wilsonquarterly.com/quarterly/biology-destiny/birth-natural-classicism)
+ 
+The app treats strict metrical form not as an artificial cage, but as an acoustic carrier wave. By embodying an abstract paradox inside a concrete dramatic persona—a reluctant guild master, a dubious heir, an imposter astronomer, or an over-promoted magistrate—and driving the narrative through strict heptameter or common-measure rhythm, the philosophical punchline lands with physical inevitability.
 
 ---
 
