@@ -1,0 +1,9 @@
+{
+  "name": "epistemic-balladeer",
+  "version": "1.0.0",
+  "description": "A Natural Classicist ballad generator for recursive and epistemic seed lines.",
+  "type": "module",
+  "dependencies": {
+    "@google/genai": "^1.0.0"
+  }
+}

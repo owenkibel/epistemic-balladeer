@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The Epistemic Balladeer</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body>
+  <main class="container">
+    <header class="hero">
+      <p class="eyebrow">Natural Classicism &bull; Recursive Verse &amp; Song Engine</p>
+      <h1>The Epistemic Balladeer</h1>
+      <p class="subtitle">
+        Turn a self-referential quip or philosophical paradox into a 12-line fourteener ballad, traditional 4/3 verse, and chorus-ready song lyrics in one pass.
+      </p>
+    </header>
+
+    <section class="composer-card">
+      <label for="seedLine" class="field-label">Your Concluding Line or Recursive Premise</label>
+      <textarea
+        id="seedLine"
+        rows="2"
+        placeholder="e.g., I'm never quite convinced how sure I'm authorized to be."
+      ></textarea>
+
+      <div class="sample-chips">
+        <span class="chip-label">Try an epistemic loop:</span>
+        <button type="button" class="chip" data-seed="I'm never quite convinced how sure I'm authorized to be.">
+          Recursive Certainty
+        </button>
+        <button type="button" class="chip" data-seed="I cannot tell what modesty I'm proud enough to claim.">
+          Paradoxical Humility
+        </button>
+        <button type="button" class="chip" data-seed="I wonder just how skeptical I'm permitted to remain.">
+          Bounded Doubt
+        </button>
+      </div>
+
+      <div class="controls-grid">
+        <div class="control-group">
+          <label for="formSelect" class="field-label">Ballad Architecture</label>
+          <select id="formSelect">
+            <option value="FOURTEENER_12">
+              Joined Fourteener (12 lines &bull; 14-syllable 4+3 couplets)
+            </option>
+            <option value="BALLAD_SHORT">
+              Conventional Short-Line (24 lines &bull; 4/3 ballad quatrains)
+            </option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label for="epistemicMode" class="field-label">Epistemic &amp; Satirical Strategy</label>
+          <select id="epistemicMode">
+            <option value="AUTO">Auto-Detect Recursive Pivot</option>
+            <option value="STATUS_IRONY">Dubious Office &amp; Inherited Pretension</option>
+            <option value="SCHOLARLY_PARADOX">Pedantic Guild &amp; Measured Ignorance</option>
+            <option value="DOMESTIC_EMPIRE">Grandiose Decrees vs. Petty Chores</option>
+            <option value="RIBALD_STATUS_IRONY">High-Low Bawdy Contrast (Forces After Hours)</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label for="genreSelect" class="field-label">Musical Genre (ACE-Step / YuE2)</label>
+          <select id="genreSelect">
+            <option value="BAROQUE_HARPSICHORD_LUTE" selected>Baroque Harpsichord &amp; Lute</option>
+            <option value="CELTIC_TAVERN_FOLK">Celtic Tavern Folk (Fiddle, Pennywhistle &amp; Bodhran)</option>
+            <option value="ELECTRO_SWING">Electro-Swing (Harpsichord, Brass Stabs &amp; Contrabass)</option>
+            <option value="AMERICANA_STRING_BAND">Americana String Band (Fiddle, Dulcimer &amp; Upright Bass)</option>
+            <option value="EARLY_ENGLISH_CONSORT">Early English Consort (Lute, Viola da Gamba &amp; Duet)</option>
+            <option value="AUTO">Auto-Match Ballad Persona</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label for="modelSelect" class="field-label">Gemini Model</label>
+          <select id="modelSelect">
+            <option value="gemini-3.5-flash-lite" selected>Gemini 3.5 Flash-Lite (Fast Default)</option>
+            <option value="gemini-3.8-flash">Gemini 3.8 Flash (Balanced Wit)</option>
+            <option value="gemini-4-argon">Gemini 4 Argon (Deep Reasoning &amp; Strict Meter)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="toggles-grid">
+        <div class="toggle-row">
+          <label class="toggle-label" for="songStagingToggle">
+            <input type="checkbox" id="songStagingToggle" checked />
+            <span class="toggle-text">
+              <strong>Stage Song Lyrics &amp; Chorus</strong> (Single-pass ACE-Step 1.5 / YuE2 / Flow format)
+            </span>
+          </label>
+        </div>
+
+        <div class="toggle-row">
+          <label class="toggle-label" for="afterHoursToggle">
+            <input type="checkbox" id="afterHoursToggle" />
+            <span class="toggle-text">
+              <strong>After Hours Mode</strong> (Permit earthy, ribald &amp; Restoration tavern wit)
+            </span>
+          </label>
+        </div>
+      </div>
+
+      <button id="generateBtn" class="primary-btn">Compose Ballad</button>
+      <p id="statusMsg" class="status-msg" hidden></p>
+    </section>
+
+    <section id="outputCard" class="poem-card" hidden>
+      <div class="poem-header-bar">
+        <div>
+          <h2 id="poemTitle" class="poem-title"></h2>
+          <p id="poemMetaBadge" class="poem-meta-badge"></p>
+        </div>
+        <div class="poem-actions">
+          <button id="copyMdBtn" type="button" class="secondary-btn">Copy .md</button>
+          <button id="downloadMdBtn" type="button" class="secondary-btn">Download .md</button>
+        </div>
+      </div>
+
+      <div id="poemBody" class="poem-body"></div>
+
+      <details class="analysis-drawer" open>
+        <summary>Epistemic &amp; Metrical Architecture</summary>
+        <div class="analysis-content">
+          <p><strong>Recursive Mechanic:</strong> <span id="recursiveNote"></span></p>
+          <p><strong>Metrical Craft:</strong> <span id="metricalNote"></span></p>
+        </div>
+      </details>
+
+      <details id="songStagingDrawer" class="analysis-drawer" open hidden>
+        <summary>Song Generator Staging (ACE-Step 1.5 &bull; YuE2 &bull; Flow Music)</summary>
+        <div class="song-staging-content">
+          <div class="staging-block">
+            <div class="staging-header">
+              <span class="staging-label">Style &amp; Instrumentation Tags</span>
+              <button id="copyTagsBtn" type="button" class="mini-btn">Copy Tags</button>
+            </div>
+            <pre id="songStyleTags" class="staging-pre"></pre>
+          </div>
+
+          <div class="staging-block">
+            <div class="staging-header">
+              <span class="staging-label">Structured Lyrics ([Verse] / [Chorus])</span>
+              <button id="copyLyricsBtn" type="button" class="mini-btn">Copy Lyrics</button>
+            </div>
+            <pre id="songLyricsBody" class="staging-pre lyrics-pre"></pre>
+          </div>
+
+          <div class="staging-block">
+            <div class="staging-header">
+              <span class="staging-label">Single-Pass Cover Art / Keyframe Prompt</span>
+              <button id="copyArtBtn" type="button" class="mini-btn">Copy Prompt</button>
+            </div>
+            <pre id="coverArtPrompt" class="staging-pre"></pre>
+          </div>
+        </div>
+      </details>
+    </section>
+
+    <section id="vaultSection" class="vault-card" hidden>
+      <div class="vault-header">
+        <div>
+          <h3 class="vault-title">Local Ballad Archive (<span id="vaultCount">0</span> / 40)</h3>
+          <p class="vault-subtitle">Saved in browser localStorage with YAML front-matter &amp; song lyrics.</p>
+        </div>
+        <div class="vault-actions">
+          <button id="exportZipBtn" type="button" class="secondary-btn">Export ZIP (.md Archive)</button>
+          <button id="clearVaultBtn" type="button" class="danger-btn">Clear Archive</button>
+        </div>
+      </div>
+      <div id="vaultList" class="vault-list"></div>
+    </section>
+  </main>
+
+  <script src="/app.js" type="module"></script>
+</body>
+</html>
