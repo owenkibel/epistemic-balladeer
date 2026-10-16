@@ -123,6 +123,8 @@ ${toneDirective}
      - *Lines 7–8:* Introduce a shift in circumstance and a foil character (a spouse, mentor, counselor, or rival) who pushes the narrator to exercise newfound leverage.
      - *Lines 9–11 (The Bathos Tricolon):* List three demands urged by the foil: two grand, sweeping ambitions in Lines 9 and 10, followed in Line 11 by an absurdly petty domestic demand (ending with an em-dash "—").
      - *Line 12 (The Recursive Resolution):* Deliver the user's seed line (adapted only as much as strictly necessary to fit the 7-foot rhythm and rhyme with Line 11) as the final punchline.
+     - If the user's input is already a self-referential line, preserve its wording as closely as possible in Line 12.
+     - If the user's input is a non-recursive observation or a general topic, either weave its premise through the ballad and coin a witty, self-referential 14-syllable variation for Line 12, or set up Stanza 2 so the plain line lands as a deadpan anti-climax.
 
 2. **BALLAD_SHORT (Conventional 4/3 Common Measure Quatrains):**
    - **Structure:** 6 quatrains (24 lines total, equivalent in beat length to 12 fourteeners).
@@ -239,6 +241,26 @@ Ensure strict adherence to the syllable counts, iambic rhythm, internal caesura 
       requiredFields.push("songStaging");
     }
 
+// Tailor thinkingLevel and sampling per model so 3.8-flash scans fast
+    // without slowing down 3.5-flash-lite or passing unsupported params to 4-argon:
+    const MODEL_CONFIGS = {
+      "gemini-3.5-flash-lite": {
+        temperature: 0.8,
+        thinkingConfig: { thinkingLevel: "minimal" } // Instant generation (change to "low" for stricter syllable counting)
+      },
+      "gemini-3.8-flash": {
+        temperature: 0.8,
+        thinkingConfig: { thinkingLevel: "low" } // Much faster than its "medium" default while still scanning meter
+      },
+      "gemini-4-argon": {
+        // Gemini 4 Argon omits temperature and supports "low" | "medium" | "high"
+        thinkingConfig: { thinkingLevel: "low" } // Or "low" for faster Vercel execution
+      }
+    };
+
+    const modelConfig =
+      MODEL_CONFIGS[selectedModel] || MODEL_CONFIGS["gemini-3.5-flash-lite"];
+
     const response = await ai.models.generateContent({
       model: selectedModel,
       contents: userPrompt,
@@ -249,7 +271,7 @@ Ensure strict adherence to the syllable counts, iambic rhythm, internal caesura 
           wantSong,
           selectedGenreKey
         ),
-        temperature: 0.8,
+        ...modelConfig,
         safetySettings: BALLAD_SAFETY_SETTINGS,
         responseMimeType: "application/json",
         responseSchema: {
@@ -267,7 +289,13 @@ Ensure strict adherence to the syllable counts, iambic rhythm, internal caesura 
       });
     }
 
+if (!response.text) {
+      throw new Error(
+        `Model returned an empty response (finishReason: ${candidate?.finishReason || "UNKNOWN"}).`
+      );
+    }
     const payload = JSON.parse(response.text);
+
     return res.status(200).json({
       ...payload,
       metadata: {
