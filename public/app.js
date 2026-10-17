@@ -331,20 +331,32 @@ exportZipBtn.addEventListener("click", async () => {
       ""
     ];
 
-vault.forEach((item, idx) => {
-      const num = String(idx + 1).padStart(2, "0");
-      const filename = `${num}-${slugify(item.title)}.md`;
+    const usedSlugs = new Set();
+
+    vault.forEach((item, idx) => {
+      let baseSlug = slugify(item.title);
+      let uniqueSlug = baseSlug;
+      let counter = 2;
+      while (usedSlugs.has(uniqueSlug)) {
+        uniqueSlug = `${baseSlug}-${counter++}`;
+      }
+      usedSlugs.add(uniqueSlug);
+
+      const filename = `${uniqueSlug}.md`;
       zip.file(filename, buildMarkdownWithYaml(item));
+
       const genreLabel = item.metadata?.musicGenreLabel
         ? ` [${item.metadata.musicGenreLabel}]`
         : "";
-      // Render title in bold without a broken .md filename hyperlink:
+      // Link to the clean title slug (no .md extension) at the same folder depth:
       indexLines.push(
-        `${idx + 1}. **${item.title}** — *${item.metadata?.seedLine || ""}* (\`${item.metadata?.modelUsed || ""}\`)${genreLabel}`
+        `${idx + 1}. **[${item.title}](./${uniqueSlug})** — *${item.metadata?.seedLine || ""}* (\`${item.metadata?.modelUsed || ""}\`)${genreLabel}`
       );
     });
 
-    zip.file("index.md", indexLines.join("\n") + "\n");
+    // Named archive-index-${stamp}.md instead of index.md so Astro keeps it
+    // at the same subfolder route depth as the sibling ballad posts:
+    zip.file(`archive-index-${stamp}.md`, indexLines.join("\n") + "\n");
 
     const zipBlob = await zip.generateAsync({ type: "blob" });
     triggerBlobDownload(zipBlob, `epistemic-ballads-${stamp}.zip`);
