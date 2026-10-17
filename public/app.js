@@ -307,10 +307,26 @@ exportZipBtn.addEventListener("click", async () => {
 
   try {
     const zip = new JSZip();
+    const exportTimestamp = new Date().toISOString();
+    const stamp = exportTimestamp.slice(0, 10);
+
     const indexLines = [
+      "---",
+      `title: "The Epistemic Balladeer — Archive Index (${stamp})"`,
+      `date: "${exportTimestamp}"`,
+      `description: "Index of ${vault.length} exported ballads from The Epistemic Balladeer."`,
+      `model: "archive-index"`,
+      `form: "INDEX"`,
+      `epistemic_strategy: "INDEX"`,
+      `music_genre: "Multiple"`,
+      `after_hours: false`,
+      `song_staging: false`,
+      `seed_line: "Archive index of ${vault.length} ballads"`,
+      "---",
+      "",
       "# The Epistemic Balladeer — Archive Export",
       "",
-      `Exported: ${new Date().toISOString()}`,
+      `Exported: ${exportTimestamp}`,
       `Total Ballads: ${vault.length}`,
       ""
     ];
@@ -327,10 +343,9 @@ exportZipBtn.addEventListener("click", async () => {
       );
     });
 
-    zip.file("INDEX.md", indexLines.join("\n") + "\n");
+    zip.file("index.md", indexLines.join("\n") + "\n");
 
     const zipBlob = await zip.generateAsync({ type: "blob" });
-    const stamp = new Date().toISOString().slice(0, 10);
     triggerBlobDownload(zipBlob, `epistemic-ballads-${stamp}.zip`);
   } finally {
     exportZipBtn.disabled = false;

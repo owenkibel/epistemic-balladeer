@@ -2,7 +2,7 @@
 
 **Natural Classicism • Recursive Verse & Single-Pass Song Engine**
 
-**The Epistemic Balladeer** is a serverless poetic and lyrical generation engine powered by the Google Gemini API (`gemini-3.5-flash-lite`, `gemini-3.8-flash`, and `gemini-4-argon`). Expanding upon the prosody-telemetry and local-archival architecture of its sister limerick project, **[Fifth Line: Gemini Edition](https://github.com/owenkibel/fifth-line-gemini)**, this application transforms self-referential quips, second-order paradoxes, and philosophical premises into metrically rigorous English ballads and chorus-ready song lyrics in a single API pass.
+**The Epistemic Balladeer** is a serverless poetic and lyrical generation engine powered by the Google Gemini API (`gemini-3.5-flash-lite`, `gemini-3.8-flash`, and `gemini-4-argon`). Expanding upon the prosody-telemetry and local-archival architecture of its sister limerick project, **[Fifth Line: Gemini Edition](https://github.com/owenkibel/fifth-line-gemini)**, this application transforms self-referential quips, second-order paradoxes, and philosophical premises into metrically rigorous English ballads and chorus-ready song lyrics in a single API pass. The app was developed in conversation with Gemini 4 Argon with Thinking High.
 
 ---
 
