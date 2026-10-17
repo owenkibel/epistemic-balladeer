@@ -331,15 +331,16 @@ exportZipBtn.addEventListener("click", async () => {
       ""
     ];
 
-    vault.forEach((item, idx) => {
+vault.forEach((item, idx) => {
       const num = String(idx + 1).padStart(2, "0");
       const filename = `${num}-${slugify(item.title)}.md`;
       zip.file(filename, buildMarkdownWithYaml(item));
       const genreLabel = item.metadata?.musicGenreLabel
         ? ` [${item.metadata.musicGenreLabel}]`
         : "";
+      // Render title in bold without a broken .md filename hyperlink:
       indexLines.push(
-        `${idx + 1}. **[${item.title}](./${filename})** — *${item.metadata?.seedLine || ""}* (\`${item.metadata?.modelUsed || ""}\`)${genreLabel}`
+        `${idx + 1}. **${item.title}** — *${item.metadata?.seedLine || ""}* (\`${item.metadata?.modelUsed || ""}\`)${genreLabel}`
       );
     });
 
