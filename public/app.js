@@ -92,10 +92,13 @@ function buildMarkdownWithYaml(entry) {
     .map((stanza) => stanza.join("\n"))
     .join("\n\n");
 
+const createdIso = meta.createdAt || new Date().toISOString();
   const lines = [
     "---",
     `title: "${safeTitle}"`,
-    `date: "${meta.createdAt || new Date().toISOString()}"`,
+    `date: "${createdIso}"`,
+    `pubDate: "${createdIso.split("T")[0]}"`,
+    `source: "balladeer"`,
     `model: "${meta.modelUsed || "gemini-3.5-flash-lite"}"`,
     `form: "${meta.form || "FOURTEENER_12"}"`,
     `epistemic_strategy: "${meta.epistemicMode || "AUTO"}"`,

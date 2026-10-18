@@ -34,32 +34,32 @@ const GENRE_PRESETS = {
   AUTO: {
     label: "Auto-Match Persona",
     seedTags:
-      "Match genre, period instrumentation, vocal register (e.g., baritone, mezzo-soprano), and BPM to the ballad's persona and setting."
+      "Folk, Classical, Americana, match period instrumentation, vocal register (Bass-Baritone male vocals or Mezzo-Soprano female vocals), and BPM to the ballad's persona"
   },
   BAROQUE_HARPSICHORD_LUTE: {
     label: "Baroque Harpsichord & Lute",
     seedTags:
-      "Baroque chamber ballad, harpsichord continuo, Renaissance lute, viola da gamba, contrapuntal bassline, theatrical bass-baritone vocals, 104 bpm, crisp articulation, courtly wit"
+      "Classical, Folk, Baroque chamber ballad, harpsichord continuo, Renaissance lute, viola da gamba, contrapuntal bassline, Bass-Baritone male vocals, 104 bpm, courtly wit"
   },
   CELTIC_TAVERN_FOLK: {
     label: "Celtic Tavern Folk",
     seedTags:
-      "Celtic folk ballad, driving fiddle, soaring pennywhistle, resonant bodhran, acoustic guitar, warm storytelling baritone vocals, rousing pub chorus, 116 bpm, lively tavern acoustics"
+      "Celtic Folk, Irish Folk, Folk, driving fiddle, soaring pennywhistle, resonant bodhran, acoustic guitar, Bass-Baritone male vocals, rousing pub chorus, 116 bpm"
   },
   ELECTRO_SWING: {
     label: "Electro-Swing",
     seedTags:
-      "Electro-swing, theatrical harpsichord, punchy brass stabs, upright contrabass, marching snare, vintage swing groove, witty cabaret vocals, 122 bpm, playful and ironic"
+      "Electro-Swing, Electro-Jazz, theatrical harpsichord, punchy brass stabs, upright contrabass, marching snare, vintage swing groove, Mezzo-Soprano female vocals, 122 bpm"
   },
   AMERICANA_STRING_BAND: {
     label: "Americana String Band",
     seedTags:
-      "Americana string band, driving fiddle, acoustic guitar, upright bass, mountain dulcimer, dry front-porch baritone vocals, subtle cosmic reverb, 110 bpm, rootsy and satirical"
+      "Americana, Bluegrass, Folk, driving fiddle, acoustic guitar, upright bass, mountain dulcimer, Bass-Baritone male vocals, 110 bpm, rootsy and satirical"
   },
   EARLY_ENGLISH_CONSORT: {
     label: "Early English Consort",
     seedTags:
-      "Early English broadside ballad, lute, viola da gamba, recorder consort, tabor drum, bass-baritone and mezzo-soprano duet, 98 bpm, Elizabethan tavern atmosphere"
+      "Folk, Classical, Indie Folk, Early English broadside ballad, lute, viola da gamba, recorder consort, tabor drum, Bass-Baritone male vocals, 98 bpm"
   }
 };
 
