@@ -88,27 +88,51 @@ function buildMarkdownWithYaml(entry) {
   const meta = entry.metadata || {};
   const safeTitle = (entry.title || "UNTITLED BALLAD").replace(/"/g, '\\"');
   const safeSeed = (meta.seedLine || "").replace(/"/g, '\\"');
+  const modelUsed = meta.modelUsed || "gemini-3.5-flash-lite";
+  const formUsed = meta.form || "FOURTEENER_12";
+  const strategyUsed = meta.epistemicMode || "AUTO";
+  const genreLabel = meta.musicGenreLabel || meta.musicGenre || "Baroque Harpsichord & Lute";
+  const isAfterHours = Boolean(meta.afterHours);
+  const createdIso = meta.createdAt || new Date().toISOString();
+
+  // Build tags array so Astro's /tags/ index groups ballads by model, form, genre, & strategy
+  const tagList = [
+    "balladeer",
+    slugify(modelUsed),
+    slugify(formUsed),
+    slugify(genreLabel),
+    slugify(strategyUsed),
+    isAfterHours ? "after-hours" : "parlor-satire"
+  ].filter(Boolean);
+
+  const uniqueTags = [...new Set(tagList)];
+
   const stanzaText = (entry.stanzas || [])
     .map((stanza) => stanza.join("\n"))
     .join("\n\n");
 
-const createdIso = meta.createdAt || new Date().toISOString();
   const lines = [
     "---",
     `title: "${safeTitle}"`,
     `date: "${createdIso}"`,
     `pubDate: "${createdIso.split("T")[0]}"`,
+    `author: "Epistemic Balladeer (${modelUsed})"`,
     `source: "balladeer"`,
-    `model: "${meta.modelUsed || "gemini-3.5-flash-lite"}"`,
-    `form: "${meta.form || "FOURTEENER_12"}"`,
-    `epistemic_strategy: "${meta.epistemicMode || "AUTO"}"`,
-    `music_genre: "${meta.musicGenreLabel || meta.musicGenre || "Baroque Harpsichord & Lute"}"`,
-    `after_hours: ${Boolean(meta.afterHours)}`,
+    `domain: "artistic"`,
+    `tags: [${uniqueTags.map((t) => `"${t}"`).join(", ")}]`,
+    `model: "${modelUsed}"`,
+    `form: "${formUsed}"`,
+    `epistemic_strategy: "${strategyUsed}"`,
+    `music_genre: "${genreLabel}"`,
+    `after_hours: ${isAfterHours}`,
     `song_staging: ${Boolean(entry.songStaging)}`,
     `seed_line: "${safeSeed}"`,
     "---",
     "",
     `# ${entry.title}`,
+    "",
+    `> **Seed Premise:** *"${meta.seedLine || "N/A"}"*  `,
+    `> **Model:** \`${modelUsed}\` • **Form:** \`${formUsed}\` • **Strategy:** \`${strategyUsed}\` • **Genre:** \`${genreLabel}\``,
     "",
     stanzaText,
     "",
@@ -125,7 +149,7 @@ const createdIso = meta.createdAt || new Date().toISOString();
     lines.push(
       "---",
       "",
-      `## Song Generator Staging (${meta.musicGenreLabel || "ACE-Step 1.5 / YuE2 / Flow"})`,
+      `## Song Generator Staging (${genreLabel})`,
       "",
       "### Style & Instrumentation Tags",
       "```text",
