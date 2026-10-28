@@ -30,36 +30,43 @@ const ALLOWED_MODELS = [
   "gemini-4-argon"
 ];
 
+const VOCAL_REGISTERS = [
+  "Bass-Baritone male vocals",
+  "Mezzo-Soprano female vocals",
+  "Lyric Tenor male vocals",
+  "Dramatic Soprano female vocals"
+];
+
 const GENRE_PRESETS = {
   AUTO: {
     label: "Auto-Match Persona",
     seedTags:
-      "Folk, Classical, Americana, match period instrumentation, vocal register (Bass-Baritone male vocals or Mezzo-Soprano female vocals), and BPM to the ballad's persona"
+      "Folk, Classical, Americana, match period instrumentation and BPM to the ballad's persona and setting"
   },
   BAROQUE_HARPSICHORD_LUTE: {
     label: "Baroque Harpsichord & Lute",
     seedTags:
-      "Classical, Folk, Baroque chamber ballad, harpsichord continuo, Renaissance lute, viola da gamba, contrapuntal bassline, Bass-Baritone male vocals, 104 bpm, courtly wit"
+      "Classical, Folk, Baroque chamber ballad, harpsichord continuo, Renaissance lute, viola da gamba, contrapuntal bassline, 104 bpm, crisp articulation, courtly wit"
   },
   CELTIC_TAVERN_FOLK: {
     label: "Celtic Tavern Folk",
     seedTags:
-      "Celtic Folk, Irish Folk, Folk, driving fiddle, soaring pennywhistle, resonant bodhran, acoustic guitar, Bass-Baritone male vocals, rousing pub chorus, 116 bpm"
+      "Celtic Folk, Irish Folk, Folk, driving fiddle, soaring pennywhistle, resonant bodhran, acoustic guitar, rousing pub chorus, 116 bpm, lively tavern acoustics"
   },
   ELECTRO_SWING: {
     label: "Electro-Swing",
     seedTags:
-      "Electro-Swing, Electro-Jazz, theatrical harpsichord, punchy brass stabs, upright contrabass, marching snare, vintage swing groove, Mezzo-Soprano female vocals, 122 bpm"
+      "Electro-Swing, Electro-Jazz, theatrical harpsichord, punchy brass stabs, upright contrabass, marching snare, vintage swing groove, witty cabaret delivery, 122 bpm, playful and ironic"
   },
   AMERICANA_STRING_BAND: {
     label: "Americana String Band",
     seedTags:
-      "Americana, Bluegrass, Folk, driving fiddle, acoustic guitar, upright bass, mountain dulcimer, Bass-Baritone male vocals, 110 bpm, rootsy and satirical"
+      "Americana, Bluegrass, Folk, driving fiddle, acoustic guitar, upright bass, mountain dulcimer, subtle cosmic reverb, 110 bpm, rootsy and satirical"
   },
   EARLY_ENGLISH_CONSORT: {
     label: "Early English Consort",
     seedTags:
-      "Folk, Classical, Indie Folk, Early English broadside ballad, lute, viola da gamba, recorder consort, tabor drum, Bass-Baritone male vocals, 98 bpm"
+      "Folk, Classical, Indie Folk, Early English broadside ballad, lute, viola da gamba, recorder consort, tabor drum, 98 bpm, Elizabethan tavern atmosphere"
   }
 };
 
@@ -80,13 +87,16 @@ function buildSystemInstruction(
 - Use razor-sharp irony, worldly wit, and comic contrast between grand institutional pretension and petty human vanity or domestic inconvenience.
 - Keep the humor clever, literary, and parlor-safe: avoid explicit sexual or anatomical ribaldry unless the user's seed line explicitly demands it.`;
 
+const assignedVoice =
+    VOCAL_REGISTERS[Math.floor(Math.random() * VOCAL_REGISTERS.length)];
+
   const songDirective = includeSongStaging
     ? `
 ### SINGLE-PASS SONG GENERATOR STAGING (ACE-STEP 1.5 / YUE2 / FLOW MUSIC)
 In the same response, populate the "songStaging" object so the ballad can be rendered directly in AI music generators:
 1. **styleTags:** Build a comma-separated tag list anchored on this selected musical style:
    - Target Genre Profile (${genreConfig.label}): ${genreConfig.seedTags}
-   - Refine the vocal character and mood tags to fit the poem's specific narrator.
+   - Target Vocal Register: Include "${assignedVoice}" (unless the ballad's narrator explicitly requires a different solo or duet register).
    - IMPORTANT: Do NOT include specific musical key names or modal scales (e.g., avoid "D Dorian" or "F sharp minor") in styleTags so prompt validation nodes never reject the string.
 2. **structuredLyrics:** Format the song using strict bracketed section headers on their own lines:
    [Intro]
