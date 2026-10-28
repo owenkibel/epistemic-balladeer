@@ -170,7 +170,7 @@ export default async function handler(req, res) {
   try {
     const {
       seedLine,
-      form = "BALLAD_SHORT",
+      form = "FOURTEENER_12",
       epistemicMode = "AUTO",
       musicGenre = "BAROQUE_HARPSICHORD_LUTE",
       afterHours = false,
