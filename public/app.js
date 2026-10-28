@@ -96,8 +96,12 @@ function buildMarkdownWithYaml(entry) {
   const createdIso = meta.createdAt || new Date().toISOString();
 
   // Build tags array so Astro's /tags/ index groups ballads by model, form, genre, & strategy
+  const isLimerick = formUsed.startsWith("LIMERICK");
+
+  // Build tags array so Astro's /tags/ index groups ballads & limericks by model, form, genre, & strategy
   const tagList = [
     "balladeer",
+    isLimerick ? "limerick" : "ballad",
     slugify(modelUsed),
     slugify(formUsed),
     slugify(genreLabel),
@@ -108,7 +112,7 @@ function buildMarkdownWithYaml(entry) {
   const uniqueTags = [...new Set(tagList)];
 
   const stanzaText = (entry.stanzas || [])
-    .map((stanza) => stanza.join("\n"))
+    .map((stanza) => stanza.map((l) => l.trimEnd()).join("\n"))
     .join("\n\n");
 
   const lines = [
@@ -119,6 +123,8 @@ function buildMarkdownWithYaml(entry) {
     `author: "Epistemic Balladeer (${modelUsed})"`,
     `source: "balladeer"`,
     `domain: "artistic"`,
+    `rendered: false`,
+    `status: "draft_prompts"`,
     `tags: [${uniqueTags.map((t) => `"${t}"`).join(", ")}]`,
     `model: "${modelUsed}"`,
     `form: "${formUsed}"`,
@@ -129,15 +135,6 @@ function buildMarkdownWithYaml(entry) {
     `seed_line: "${safeSeed}"`,
     "---",
     "",
-    `# ${entry.title}`,
-    "",
-    `> **Seed Premise:** *"${meta.seedLine || "N/A"}"*  `,
-    `> **Model:** \`${modelUsed}\` • **Form:** \`${formUsed}\` • **Strategy:** \`${strategyUsed}\` • **Genre:** \`${genreLabel}\``,
-    "",
-    stanzaText,
-    "",
-    "---",
-    "",
     "## Epistemic & Metrical Architecture",
     "",
     `- **Recursive Mechanic:** ${entry.epistemicAnalysis?.recursiveMechanic || "N/A"}`,
@@ -145,7 +142,7 @@ function buildMarkdownWithYaml(entry) {
     ""
   ];
 
-  if (entry.songStaging) {
+if (entry.songStaging) {
     lines.push(
       "---",
       "",
@@ -167,6 +164,17 @@ function buildMarkdownWithYaml(entry) {
       "```",
       ""
     );
+
+    if (entry.songStaging.coverArtPrompt) {
+      lines.push(
+        "---",
+        "",
+        "## Visual Scene Prompts",
+        "",
+        `Prompt 1: ${entry.songStaging.coverArtPrompt.trim()}`,
+        ""
+      );
+    }
   }
 
   return lines.join("\n");
@@ -341,6 +349,13 @@ exportZipBtn.addEventListener("click", async () => {
       "---",
       `title: "The Epistemic Balladeer — Archive Index (${stamp})"`,
       `date: "${exportTimestamp}"`,
+      `pubDate: "${stamp}"`,
+      `author: "Epistemic Balladeer"`,
+      `source: "balladeer"`,
+      `domain: "artistic"`,
+      `rendered: true`,
+      `status: "rendered"`,
+      `tags: ["archive", "balladeer"]`,
       `description: "Index of ${vault.length} exported ballads from The Epistemic Balladeer."`,
       `model: "archive-index"`,
       `form: "INDEX"`,
@@ -407,9 +422,12 @@ generateBtn.addEventListener("click", async () => {
     return;
   }
 
+const isLimerickForm = formSelect.value.startsWith("LIMERICK");
   generateBtn.disabled = true;
   statusMsg.textContent = songStagingToggle.checked
-    ? "Composing ballad and staging [Verse]/[Chorus] song lyrics in one pass..."
+    ? `Composing ${isLimerickForm ? "limerick" : "ballad"} and staging [Verse]/[Chorus] song lyrics in one pass...`
+    : isLimerickForm
+    ? "Scanning anapests and calibrating punchline..."
     : "Scanning heptameters and calibrating bathos...";
   statusMsg.hidden = false;
 

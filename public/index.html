@@ -40,14 +40,20 @@
       <div class="controls-grid">
         <div class="control-group">
           <label for="formSelect" class="field-label">Ballad Architecture</label>
-          <select id="formSelect">
-            <option value="FOURTEENER_12">
-              Joined Fourteener (12 lines &bull; 14-syllable 4+3 couplets)
-            </option>
-            <option value="BALLAD_SHORT">
-              Conventional Short-Line (24 lines &bull; 4/3 ballad quatrains)
-            </option>
-          </select>
+        <select id="formSelect">
+  <option value="BALLAD_SHORT">
+    4/3 Common Measure Ballad (6 Quatrains • 8/6 Alternating)
+  </option>
+  <option value="FOURTEENER_12" selected>
+    Joined Fourteener Ballad (12 Lines • 14-Syllable Heptameter — Default)
+  </option>
+  <option value="LIMERICK_SINGLE">
+    Single Anapestic Limerick (5 Lines • AABBA)
+  </option>
+  <option value="LIMERICK_SEQUENCE">
+    Satirical Limerick Sequence (3 Stanzas • 15 Lines AABBA)
+  </option>
+</select>
         </div>
 
         <div class="control-group">

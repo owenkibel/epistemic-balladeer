@@ -141,6 +141,17 @@ ${toneDirective}
    - **Meter:** Alternating iambic tetrameter (8 syllables / 4 beats) in odd lines and iambic trimeter (6 syllables / 3 beats) in even lines.
    - **Rhyme Scheme:** ABCB or ABAB in each quatrain.
    - **Rhetorical Architecture:** Follow the same narrative progression—dubious station (Stanzas 1–2), ironic contrast (Stanza 3), foil character's grand escalation (Stanzas 4–5), and the sudden domestic drop leading into the user's seed line split across Lines 23 and 24 (Stanza 6).
+
+3. **LIMERICK_SINGLE (Classic 5-Line Anapestic Limerick):**
+   - **Structure:** Exactly 1 stanza of 5 lines returned as a single 5-string array inside "stanzas" (i.e., [[line1, line2, line3, line4, line5]]).
+   - **Rhyme Scheme:** Strict AABBA with crisp, unforced masculine or comic double rhymes.
+   - **Meter:** Bouncing anapestic meter (da-da-DUM). Lines 1, 2, and 5 have 3 anapestic beats (8–9 syllables); Lines 3 and 4 have 2 anapestic beats (5–6 syllables).
+   - **Rhetorical Architecture:** Lines 1–2 introduce the persona and epistemic pretension; Lines 3–4 tighten the comic contradiction; Line 5 lands the user's seed premise (or a tight anapestic compression of it) as a devastating punchline.
+
+4. **LIMERICK_SEQUENCE (3-Stanza Satirical Limerick Cycle):**
+   - **Structure:** 3 stanzas of 5 lines each (15 lines total), returned as 3 arrays inside "stanzas".
+   - **Rhyme & Meter:** Each stanza follows strict AABBA anapestic meter (Lines 1, 2, 5 = 8–9 syllables / 3 beats; Lines 3, 4 = 5–6 syllables / 2 beats) with fresh rhymes in each stanza.
+   - **Rhetorical Architecture:** Stanza 1 establishes the narrator's dubious office; Stanza 2 introduces the foil's grand escalation; Stanza 3 drops into petty bathos and lands the seed premise on Line 15.
 ${songDirective}`;
 }
 
@@ -187,7 +198,9 @@ export default async function handler(req, res) {
 
     const ai = new GoogleGenAI({ apiKey });
 
-    const userPrompt = `Compose a ballad built around this user seed line:
+const isLimerick = form.startsWith("LIMERICK");
+
+    const userPrompt = `Compose a ${isLimerick ? "satirical anapestic limerick work" : "ballad"} built around this user seed line:
 "${seedLine.trim()}"
 
 Selected Poetic Form: ${form}
@@ -196,7 +209,11 @@ After Hours (Ribald Mode): ${isRibald ? "ENABLED" : "DISABLED (keep parlor-safe 
 Include Song Generator Lyrics & Chorus (ACE-Step 1.5 / YuE2 / Flow): ${wantSong ? "YES" : "NO"}
 Musical Genre Style: ${genreInfo.label} (${genreInfo.seedTags})
 
-Ensure strict adherence to the syllable counts, iambic rhythm, internal caesura (for FOURTEENER_12), anadiplosis turn, and bathos escalation leading seamlessly into the final line.`;
+Ensure strict adherence to the syllable counts, ${
+      isLimerick
+        ? "bouncing 3-beat/2-beat anapestic rhythm (AABBA), and punchline twist"
+        : "iambic rhythm, internal caesura (for FOURTEENER_12), anadiplosis turn, and bathos escalation"
+    } leading seamlessly into the final line.`;
 
     const schemaProperties = {
       title: {
