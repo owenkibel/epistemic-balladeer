@@ -91,11 +91,10 @@ function buildMarkdownWithYaml(entry) {
   const modelUsed = meta.modelUsed || "gemini-3.5-flash-lite";
   const formUsed = meta.form || "FOURTEENER_12";
   const strategyUsed = meta.epistemicMode || "AUTO";
-  const genreLabel = meta.musicGenreLabel || meta.musicGenre || "Baroque Harpsichord & Lute";
+  const genreLabel =
+    meta.musicGenreLabel || meta.musicGenre || "Baroque Harpsichord & Lute";
   const isAfterHours = Boolean(meta.afterHours);
   const createdIso = meta.createdAt || new Date().toISOString();
-
-  // Build tags array so Astro's /tags/ index groups ballads by model, form, genre, & strategy
   const isLimerick = formUsed.startsWith("LIMERICK");
 
   // Build tags array so Astro's /tags/ index groups ballads & limericks by model, form, genre, & strategy
@@ -111,8 +110,13 @@ function buildMarkdownWithYaml(entry) {
 
   const uniqueTags = [...new Set(tagList)];
 
+  // Join the separate poetry stanzas cleanly (no trailing double spaces)
   const stanzaText = (entry.stanzas || [])
-    .map((stanza) => stanza.map((l) => l.trimEnd()).join("\n"))
+    .map((stanza) =>
+      Array.isArray(stanza)
+        ? stanza.map((l) => String(l).trimEnd()).join("\n")
+        : String(stanza).trimEnd()
+    )
     .join("\n\n");
 
   const lines = [
@@ -135,6 +139,15 @@ function buildMarkdownWithYaml(entry) {
     `seed_line: "${safeSeed}"`,
     "---",
     "",
+    `# ${entry.title}`,
+    "",
+    `> **Seed Premise:** *"${meta.seedLine || "N/A"}"*  `,
+    `> **Model:** \`${modelUsed}\` • **Form:** \`${formUsed}\` • **Strategy:** \`${strategyUsed}\` • **Genre:** \`${genreLabel}\``,
+    "",
+    stanzaText,
+    "",
+    "---",
+    "",
     "## Epistemic & Metrical Architecture",
     "",
     `- **Recursive Mechanic:** ${entry.epistemicAnalysis?.recursiveMechanic || "N/A"}`,
@@ -142,7 +155,7 @@ function buildMarkdownWithYaml(entry) {
     ""
   ];
 
-if (entry.songStaging) {
+  if (entry.songStaging) {
     lines.push(
       "---",
       "",
@@ -422,7 +435,7 @@ generateBtn.addEventListener("click", async () => {
     return;
   }
 
-const isLimerickForm = formSelect.value.startsWith("LIMERICK");
+  const isLimerickForm = formSelect.value.startsWith("LIMERICK");
   generateBtn.disabled = true;
   statusMsg.textContent = songStagingToggle.checked
     ? `Composing ${isLimerickForm ? "limerick" : "ballad"} and staging [Verse]/[Chorus] song lyrics in one pass...`
