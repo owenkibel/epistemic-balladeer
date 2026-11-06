@@ -87,7 +87,17 @@ function buildSystemInstruction(
 - Use razor-sharp irony, worldly wit, and comic contrast between grand institutional pretension and petty human vanity or domestic inconvenience.
 - Keep the humor clever, literary, and parlor-safe: avoid explicit sexual or anatomical ribaldry unless the user's seed line explicitly demands it.`;
 
-const assignedVoice =
+  const epistemicKernelDirective = `### THREE-WAY EPISTEMIC KERNEL ROUTING & LEXICAL MINT (Selected Mode: ${epistemicMode})
+1. **Kernel Auto-Detection (When Mode is AUTO) or Explicit Mode Execution:**
+   - **Branch A — RECURSIVE_PIVOT (Self-Referential Paradox):** If the seed line turns a cognitive, moral, or institutional standard back upon itself, center the ballad on that second-order loop and highlight the anadiplosis hinge.
+   - **Branch B — LEXICAL_MINT (Univerbation & Haplological Portmanteau):** If Mode is "LEXICAL_MINT", OR if Mode is "AUTO" and the seed line contains a phrasal compound (e.g., "wherewithal", "vitvot" ["with what"]), a lexical blend (e.g., "pandemocrats"), or an adjective+noun / prepositional phrase ripe for nominalization ("with what to eat", "pandemic Democrats", "subsidy mandarins"), center the work on lexical condensation.
+   - **Branch C — BATHOS_AUDIT (Institutional & Empirical Understatement):** If the seed line is a direct observation or non-recursive proposition, build a high-gravity institutional setup that collapses into deadpan domestic bathos on the final line.
+2. **Rules for the Lexical Mint ("epistemicAnalysis.lexicalMint"):**
+   - In EVERY response, coin or analyze 2 to 3 elegant words in "epistemicAnalysis.lexicalMint" derived from the seed premise and weave at least one naturally into the verse or chorus:
+     * **Univerbation (De-Phrasal Nominalization):** Fuse a prepositional or interrogative phrase into a single substantive noun denoting material means, subsistence, or posture—on the model of English "wherewithal" (where+with+all) or the Baltic-English calqued univerbation "vitvot" ("with what", i.e., the material means to eat or survive).
+     * **Haplological Portmanteau (Telescopic Root Blend):** Fuse two words that share an overlapping phonetic syllable or classical root pivot (e.g., "pandemic" + "Democrats" -> "pandemocrats", telescoping on the shared Greek root "-dem-"). Never mash words together without a shared phonetic hinge, and never degenerate into crude playground name-calling.`;
+
+  const assignedVoice =
     VOCAL_REGISTERS[Math.floor(Math.random() * VOCAL_REGISTERS.length)];
 
   const songDirective = includeSongStaging
@@ -111,14 +121,16 @@ In the same response, populate the "songStaging" object so the ballad can be ren
 3. **coverArtPrompt:** A single vivid sentence describing an illustration or keyframe matching the ballad's setting, instruments (${genreConfig.label}), and ironic mood.`
     : "";
 
-  return `You are a master formalist poet and songwriter in the tradition of Natural Classicism and English broadside balladry.
-Your task is to take a user's clever, self-referential, or philosophical input line (or theme) and weave it into a rigorous, witty ballad.
+  return `You are a master formalist poet, philologist, and songwriter in the tradition of Natural Classicism and English broadside balladry.
+Your task is to take a user's clever, self-referential, lexical, or philosophical input line (or theme) and weave it into a rigorous, witty ballad or limerick.
 
-### CORE CONCEPT: EPISTEMIC CREATIVITY
-Many inputs exhibit "epistemic recursion"—where a cognitive, social, or moral concept is turned back upon itself (e.g., questioning how much certainty one is certain to have, what authority authorizes one's authority, or how much skepticism one may skeptically permit).
+### CORE CONCEPT: EPISTEMIC & LEXICAL CREATIVITY
+Many inputs exhibit either "epistemic recursion" (where a cognitive, social, or moral concept is turned back upon itself) or "lexical condensation" (univerbations like 'wherewithal' and 'vitvot', or haplological portmanteaux like 'pandemocrats').
 Ground this premise in a concrete dramatic persona (a reluctant guild master, a minor magistrate, an imposter astronomer, a harried courtier, or an over-promoted clerk).
 
 ${toneDirective}
+
+${epistemicKernelDirective}
 
 ### POETIC FORMS SUPPORTED
 
@@ -132,9 +144,7 @@ ${toneDirective}
      - *Lines 5–6:* Conclude Stanza 1 with an ironic maxim about human nature, skill, or station.
      - *Lines 7–8:* Introduce a shift in circumstance and a foil character (a spouse, mentor, counselor, or rival) who pushes the narrator to exercise newfound leverage.
      - *Lines 9–11 (The Bathos Tricolon):* List three demands urged by the foil: two grand, sweeping ambitions in Lines 9 and 10, followed in Line 11 by an absurdly petty domestic demand (ending with an em-dash "—").
-     - *Line 12 (The Recursive Resolution):* Deliver the user's seed line (adapted only as much as strictly necessary to fit the 7-foot rhythm and rhyme with Line 11) as the final punchline.
-     - If the user's input is already a self-referential line, preserve its wording as closely as possible in Line 12.
-     - If the user's input is a non-recursive observation or a general topic, either weave its premise through the ballad and coin a witty, self-referential 14-syllable variation for Line 12, or set up Stanza 2 so the plain line lands as a deadpan anti-climax.
+     - *Line 12 (The Resolution):* Deliver the user's seed line (adapted only as much as strictly necessary to fit the 7-foot rhythm and rhyme with Line 11) as the final punchline.
 
 2. **BALLAD_SHORT (Conventional 4/3 Common Measure Quatrains):**
    - **Structure:** 6 quatrains (24 lines total, equivalent in beat length to 12 fourteeners).
@@ -197,14 +207,13 @@ export default async function handler(req, res) {
     const wantSong = Boolean(includeSongStaging);
 
     const ai = new GoogleGenAI({ apiKey });
-
-const isLimerick = form.startsWith("LIMERICK");
+    const isLimerick = form.startsWith("LIMERICK");
 
     const userPrompt = `Compose a ${isLimerick ? "satirical anapestic limerick work" : "ballad"} built around this user seed line:
 "${seedLine.trim()}"
 
 Selected Poetic Form: ${form}
-Epistemic & Satirical Framing Angle: ${epistemicMode}
+Epistemic & Lexical Framing Angle: ${epistemicMode}
 After Hours (Ribald Mode): ${isRibald ? "ENABLED" : "DISABLED (keep parlor-safe and dryly ironic)"}
 Include Song Generator Lyrics & Chorus (ACE-Step 1.5 / YuE2 / Flow): ${wantSong ? "YES" : "NO"}
 Musical Genre Style: ${genreInfo.label} (${genreInfo.seedTags})
@@ -213,7 +222,7 @@ Ensure strict adherence to the syllable counts, ${
       isLimerick
         ? "bouncing 3-beat/2-beat anapestic rhythm (AABBA), and punchline twist"
         : "iambic rhythm, internal caesura (for FOURTEENER_12), anadiplosis turn, and bathos escalation"
-    } leading seamlessly into the final line.`;
+    } leading seamlessly into the final line, and populate "epistemicAnalysis.lexicalMint" with 2-3 univerbated substantives or haplological portmanteaux.`;
 
     const schemaProperties = {
       title: {
@@ -231,16 +240,46 @@ Ensure strict adherence to the syllable counts, ${
       epistemicAnalysis: {
         type: Type.OBJECT,
         properties: {
+          kernelUsed: {
+            type: Type.STRING,
+            description: "Which kernel branch was triggered: RECURSIVE_PIVOT, LEXICAL_MINT, or BATHOS_AUDIT."
+          },
           recursiveMechanic: {
             type: Type.STRING,
-            description: "1-2 sentences explaining the second-order epistemic loop and status contrast."
+            description: "1-2 sentences explaining the epistemic loop, lexical condensation, or status contrast."
           },
           metricalNotes: {
             type: Type.STRING,
-            description: "Brief note on how the 4/3 caesura or ballad meter shapes the final punchline."
+            description: "Brief note on how the 4/3 caesura, ballad meter, or anapestic bounce shapes the final punchline."
+          },
+          lexicalMint: {
+            type: Type.ARRAY,
+            description: "2 to 3 coined or highlighted univerbations (wherewithal/vitvot type) and haplological portmanteaux (pandemocrat type).",
+            items: {
+              type: Type.OBJECT,
+              properties: {
+                term: {
+                  type: Type.STRING,
+                  description: "The coined or highlighted word (e.g., 'vitvot', 'wherewithal', 'pandemocrat')."
+                },
+                morphology: {
+                  type: Type.STRING,
+                  description: "Linguistic classification and root breakdown (e.g., 'Calqued Univerbation: with + what' or 'Haplological Portmanteau: pandemic + Democrat via -dem-')."
+                },
+                scansion: {
+                  type: Type.STRING,
+                  description: "Acoustic stress guide (e.g., 'VIT-vot' or 'pan-DEM-o-crat')."
+                },
+                definition: {
+                  type: Type.STRING,
+                  description: "Dry, 1-sentence Ambrose Bierce / Samuel Johnson style lexicographical definition."
+                }
+              },
+              required: ["term", "morphology", "scansion", "definition"]
+            }
           }
         },
-        required: ["recursiveMechanic", "metricalNotes"]
+        required: ["kernelUsed", "recursiveMechanic", "metricalNotes", "lexicalMint"]
       }
     };
 
@@ -268,20 +307,17 @@ Ensure strict adherence to the syllable counts, ${
       requiredFields.push("songStaging");
     }
 
-// Tailor thinkingLevel and sampling per model so 3.8-flash scans fast
-    // without slowing down 3.5-flash-lite or passing unsupported params to 4-argon:
     const MODEL_CONFIGS = {
       "gemini-3.5-flash-lite": {
         temperature: 0.8,
-        thinkingConfig: { thinkingLevel: "minimal" } // Instant generation (change to "low" for stricter syllable counting)
+        thinkingConfig: { thinkingLevel: "minimal" }
       },
       "gemini-3.8-flash": {
         temperature: 0.8,
-        thinkingConfig: { thinkingLevel: "low" } // Much faster than its "medium" default while still scanning meter
+        thinkingConfig: { thinkingLevel: "low" }
       },
       "gemini-4-argon": {
-        // Gemini 4 Argon omits temperature and supports "low" | "medium" | "high"
-        thinkingConfig: { thinkingLevel: "low" } // Or "low" for faster Vercel execution
+        thinkingConfig: { thinkingLevel: "low" }
       }
     };
 
@@ -316,7 +352,7 @@ Ensure strict adherence to the syllable counts, ${
       });
     }
 
-if (!response.text) {
+    if (!response.text) {
       throw new Error(
         `Model returned an empty response (finishReason: ${candidate?.finishReason || "UNKNOWN"}).`
       );

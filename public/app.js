@@ -90,7 +90,8 @@ function buildMarkdownWithYaml(entry) {
   const safeSeed = (meta.seedLine || "").replace(/"/g, '\\"');
   const modelUsed = meta.modelUsed || "gemini-3.5-flash-lite";
   const formUsed = meta.form || "FOURTEENER_12";
-  const strategyUsed = meta.epistemicMode || "AUTO";
+  const strategyUsed =
+    entry.epistemicAnalysis?.kernelUsed || meta.epistemicMode || "AUTO";
   const genreLabel =
     meta.musicGenreLabel || meta.musicGenre || "Baroque Harpsichord & Lute";
   const isAfterHours = Boolean(meta.afterHours);
@@ -150,10 +151,23 @@ function buildMarkdownWithYaml(entry) {
     "",
     "## Epistemic & Metrical Architecture",
     "",
-    `- **Recursive Mechanic:** ${entry.epistemicAnalysis?.recursiveMechanic || "N/A"}`,
+    `- **Kernel & Mechanic:** ${entry.epistemicAnalysis?.recursiveMechanic || "N/A"}`,
     `- **Metrical Craft:** ${entry.epistemicAnalysis?.metricalNotes || "N/A"}`,
     ""
   ];
+
+  const mintList = entry.epistemicAnalysis?.lexicalMint || [];
+  if (Array.isArray(mintList) && mintList.length > 0) {
+    lines.push(
+      "### Lexical & Portmanteau Mint",
+      "",
+      ...mintList.map(
+        (m) =>
+          `- **${m.term}** (\`${m.scansion || m.term}\` — *${m.morphology}*): ${m.definition}`
+      ),
+      ""
+    );
+  }
 
   if (entry.songStaging) {
     lines.push(
@@ -248,8 +262,24 @@ function displayPoem(entry) {
     poemBody.appendChild(stanzaDiv);
   });
 
-  recursiveNote.textContent = entry.epistemicAnalysis?.recursiveMechanic || "";
+  const kernelBadge = entry.epistemicAnalysis?.kernelUsed
+    ? `[${entry.epistemicAnalysis.kernelUsed}] `
+    : "";
+  recursiveNote.textContent =
+    kernelBadge + (entry.epistemicAnalysis?.recursiveMechanic || "");
   metricalNote.textContent = entry.epistemicAnalysis?.metricalNotes || "";
+
+  const mintList = entry.epistemicAnalysis?.lexicalMint || [];
+  if (Array.isArray(mintList) && mintList.length > 0) {
+    const mintFormatted = mintList
+      .map(
+        (m) =>
+          `• ${m.term} (${m.scansion || m.term} — ${m.morphology}): ${m.definition}`
+      )
+      .join("\n");
+    metricalNote.style.whiteSpace = "pre-line";
+    metricalNote.textContent += `\n\n🪙 Lexical & Portmanteau Mint:\n${mintFormatted}`;
+  }
 
   if (entry.songStaging) {
     songStyleTags.textContent = entry.songStaging.styleTags || "";
@@ -438,10 +468,10 @@ generateBtn.addEventListener("click", async () => {
   const isLimerickForm = formSelect.value.startsWith("LIMERICK");
   generateBtn.disabled = true;
   statusMsg.textContent = songStagingToggle.checked
-    ? `Composing ${isLimerickForm ? "limerick" : "ballad"} and staging [Verse]/[Chorus] song lyrics in one pass...`
+    ? `Composing ${isLimerickForm ? "limerick" : "ballad"}, minting portmanteaux, and staging [Verse]/[Chorus] song lyrics...`
     : isLimerickForm
-    ? "Scanning anapests and calibrating punchline..."
-    : "Scanning heptameters and calibrating bathos...";
+    ? "Scanning anapests and minting lexical blends..."
+    : "Scanning heptameters and minting lexical blends...";
   statusMsg.hidden = false;
 
   try {
