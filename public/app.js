@@ -433,9 +433,10 @@ exportZipBtn.addEventListener("click", async () => {
       const genreLabel = item.metadata?.musicGenreLabel
         ? ` [${item.metadata.musicGenreLabel}]`
         : "";
-      // Link to the clean title slug (no .md extension) at the same folder depth:
+// Step up one level (../) out of the trailing-slash /archive-index-YYYY-MM-DD/ URL
+      // so the link resolves to the sibling post in both subfolders and flat posts/:
       indexLines.push(
-        `${idx + 1}. **[${item.title}](./${uniqueSlug})** — *${item.metadata?.seedLine || ""}* (\`${item.metadata?.modelUsed || ""}\`)${genreLabel}`
+        `${idx + 1}. **[${item.title}](../${uniqueSlug}/)** — *${item.metadata?.seedLine || ""}* (\`${item.metadata?.modelUsed || ""}\`)${genreLabel}`
       );
     });
 
