@@ -433,11 +433,10 @@ exportZipBtn.addEventListener("click", async () => {
       const genreLabel = item.metadata?.musicGenreLabel
         ? ` [${item.metadata.musicGenreLabel}]`
         : "";
-// Step up one level (../) out of the trailing-slash /archive-index-YYYY-MM-DD/ URL
-      // so the link resolves to the sibling post in both subfolders and flat posts/:
-      indexLines.push(
-        `${idx + 1}. **[${item.title}](../${uniqueSlug}/)** — *${item.metadata?.seedLine || ""}* (\`${item.metadata?.modelUsed || ""}\`)${genreLabel}`
-      );
+// Root-relative path works in both astro dev (no trailing slash) and Cloudflare Pages (trailing slash):
+   indexLines.push(
+     `${idx + 1}. **[${item.title}](/blog/epistemic-ballads-${stamp}/${uniqueSlug})** — *${item.metadata?.seedLine || ""}* (\`${item.metadata?.modelUsed || ""}\`)${genreLabel}`
+   );
     });
 
     // Named archive-index-${stamp}.md instead of index.md so Astro keeps it
