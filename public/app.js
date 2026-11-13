@@ -88,7 +88,7 @@ function buildMarkdownWithYaml(entry) {
   const meta = entry.metadata || {};
   const safeTitle = (entry.title || "UNTITLED BALLAD").replace(/"/g, '\\"');
   const safeSeed = (meta.seedLine || "").replace(/"/g, '\\"');
-  const modelUsed = meta.modelUsed || "gemini-3.5-flash-lite";
+  const modelUsed = meta.modelUsed || "gemini-4-hydrogen";
   const formUsed = meta.form || "FOURTEENER_12";
   const strategyUsed =
     entry.epistemicAnalysis?.kernelUsed || meta.epistemicMode || "AUTO";
@@ -247,7 +247,7 @@ function displayPoem(entry) {
   const genreBadge = entry.songStaging
     ? ` • 🎵 ${meta.musicGenreLabel || meta.musicGenre || "Song Staged"}`
     : "";
-  poemMetaBadge.textContent = `${meta.modelUsed || "gemini-3.5-flash-lite"} • ${meta.form || "FOURTEENER_12"} • ${modeBadge}${genreBadge}`;
+  poemMetaBadge.textContent = `${meta.modelUsed || "gemini-4-hydrogen"} • ${meta.form || "FOURTEENER_12"} • ${modeBadge}${genreBadge}`;
 
   poemBody.innerHTML = "";
   (entry.stanzas || []).forEach((stanzaLines) => {

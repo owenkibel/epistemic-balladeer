@@ -24,7 +24,10 @@ const BALLAD_SAFETY_SETTINGS = [
   }
 ];
 
+const DEFAULT_MODEL = "gemini-4-hydrogen";
+
 const ALLOWED_MODELS = [
+  "gemini-4-hydrogen",
   "gemini-3.5-flash-lite",
   "gemini-3.8-flash",
   "gemini-4-argon"
@@ -185,7 +188,7 @@ export default async function handler(req, res) {
       musicGenre = "BAROQUE_HARPSICHORD_LUTE",
       afterHours = false,
       includeSongStaging = true,
-      modelName = "gemini-3.5-flash-lite"
+      modelName = DEFAULT_MODEL
     } = req.body || {};
 
     if (!seedLine || typeof seedLine !== "string" || seedLine.trim().length < 5) {
@@ -196,7 +199,7 @@ export default async function handler(req, res) {
 
     const selectedModel = ALLOWED_MODELS.includes(modelName)
       ? modelName
-      : "gemini-3.5-flash-lite";
+      : DEFAULT_MODEL;
 
     const selectedGenreKey = GENRE_PRESETS[musicGenre]
       ? musicGenre
@@ -308,6 +311,9 @@ Ensure strict adherence to the syllable counts, ${
     }
 
     const MODEL_CONFIGS = {
+      "gemini-4-hydrogen": {
+        thinkingConfig: { thinkingLevel: "low" }
+      },
       "gemini-3.5-flash-lite": {
         temperature: 0.8,
         thinkingConfig: { thinkingLevel: "minimal" }
@@ -322,7 +328,7 @@ Ensure strict adherence to the syllable counts, ${
     };
 
     const modelConfig =
-      MODEL_CONFIGS[selectedModel] || MODEL_CONFIGS["gemini-3.5-flash-lite"];
+      MODEL_CONFIGS[selectedModel] || MODEL_CONFIGS[DEFAULT_MODEL];
 
     const response = await ai.models.generateContent({
       model: selectedModel,
