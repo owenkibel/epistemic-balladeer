@@ -168,6 +168,34 @@ ${epistemicKernelDirective}
 ${songDirective}`;
 }
 
+function normalizeStructuredLyrics(raw) {
+  if (!raw || typeof raw !== "string") return "";
+  return raw
+    .replace(/\\n/g, "\n") // Unescape literal \n sequences
+    // Force a blank line before and a newline after every [Section] tag
+    .replace(
+      /\s*(\[(?:Intro|Verse[^\]]*|Chorus[^\]]*|Bridge[^\]]*|Outro[^\]]*|Instrumental[^\]]*|Hook[^\]]*)\])\s*/gi,
+      "\n\n$1\n"
+    )
+    // Split any inline pipe or slash separators onto vertical lines
+    .replace(/[ \t]*[|/][ \t]*/g, "\n")
+    .split("\n")
+    .map((line) => {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith("[")) return trimmed;
+      // If Hydrogen collapsed multiple sentences/clauses onto one long line, split them at punctuation boundaries
+      if (trimmed.length > 90) {
+        return trimmed
+          .replace(/([.;!?—])\s+(?=[A-Z"'])/g, "$1\n")
+          .replace(/,\s+(?=[A-Z])/g, ",\n");
+      }
+      return trimmed;
+    })
+    .join("\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed. Use POST." });
@@ -363,7 +391,12 @@ Ensure strict adherence to the syllable counts, ${
         `Model returned an empty response (finishReason: ${candidate?.finishReason || "UNKNOWN"}).`
       );
     }
-    const payload = JSON.parse(response.text);
+const payload = JSON.parse(response.text);
+    if (payload?.songStaging?.structuredLyrics) {
+      payload.songStaging.structuredLyrics = normalizeStructuredLyrics(
+        payload.songStaging.structuredLyrics
+      );
+    }
 
     return res.status(200).json({
       ...payload,
